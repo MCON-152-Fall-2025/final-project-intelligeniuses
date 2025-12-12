@@ -32,14 +32,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Enhanced controller tests demonstrating a wide range of Mockito features.
  * Focus: show students how to stub, verify, capture, match, order, and use spies.
- */
+ */ 
 @ExtendWith(MockitoExtension.class)
 class RecipeControllerTest {
 
     private MockMvc mockMvc;
 
     @Mock
-   // private RecipeService recipeService;
+    private RecipeService recipeService;
 
     @InjectMocks
     private RecipeController recipeController;

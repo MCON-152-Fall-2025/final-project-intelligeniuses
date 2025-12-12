@@ -39,7 +39,7 @@ class RecipeControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private RecipeService recipeService;
+   // private RecipeService recipeService;
 
     @InjectMocks
     private RecipeController recipeController;

@@ -15,6 +15,7 @@ import java.util.Objects;
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // RS1F2-313 verified that the ID is here and since AppUser extends BaseEntity it inherits this field
     private Long id;
 
     @CreationTimestamp

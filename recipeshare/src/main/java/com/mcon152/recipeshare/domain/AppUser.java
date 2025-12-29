@@ -11,7 +11,7 @@ import java.util.Objects;
 @Table(name = "app_users")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "createdAt", "updatedAt"})
 @JsonSerialize(using = AppUserSerializer.class)
-public class AppUser extends BaseEntity {
+public class  AppUser extends BaseEntity {
 
     @Column(nullable = false, unique = true, length = 50)
     private String username;

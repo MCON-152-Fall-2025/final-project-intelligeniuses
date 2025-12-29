@@ -4,6 +4,8 @@ import com.mcon152.recipeshare.domain.Recipe;
 import com.mcon152.recipeshare.domain.Tag;
 import com.mcon152.recipeshare.repository.RecipeRepository;
 import org.springframework.stereotype.Service;
+import com.mcon152.recipeshare.events.RecipeCreatedEvent;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,15 +15,29 @@ import java.util.stream.Collectors;
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository repo;
+    private final ApplicationEventPublisher eventPublisher; // field to hold event publisher
 
-    public RecipeServiceImpl(RecipeRepository repo) {
+    public RecipeServiceImpl(RecipeRepository repo, ApplicationEventPublisher eventPublisher) {
         this.repo = repo;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
     public Recipe addRecipe(Recipe recipe) {
         recipe.setId(null); // ensure new entity
-        return repo.save(recipe);
+        Recipe savedRecipe = repo.save(recipe);
+
+        // publish event after successful save
+        if (savedRecipe.getAuthor() != null) { // safety check for null author
+            RecipeCreatedEvent event = new RecipeCreatedEvent(
+                    this,                        // source
+                    savedRecipe.getId(),                // get recipe ID
+                    savedRecipe.getAuthor().getId(),    // get author ID
+                    savedRecipe.getTitle()              // get recipe title
+            );
+            eventPublisher.publishEvent(event); // publish event
+        }
+        return savedRecipe;
     }
 
     @Override

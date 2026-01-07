@@ -1,0 +1,43 @@
+package com.mcon152.recipeshare.service;
+
+import com.mcon152.recipeshare.domain.Notification;
+import com.mcon152.recipeshare.events.RecipeCreatedEvent;
+import com.mcon152.recipeshare.repository.NotificationRepository;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class NotificationService {
+
+    // dependencies
+    private final NotificationRepository notificationRepository;
+    private final FollowService followService;
+
+    // constructor
+    public NotificationService(NotificationRepository notificationRepository, FollowService followService) {
+        this.notificationRepository = notificationRepository;
+        this.followService = followService;
+    }
+
+    // observer - listens for recipe events
+    @EventListener
+    public void handleRecipeCreated(RecipeCreatedEvent event) {
+
+        // get recipe author
+        Long authorId = event.getAuthorId();
+
+        // get followers of this author
+        List<Long> followerIds = followService.getFollowers(authorId);
+
+        // create notification message
+        String message = "New recipe '" + event.getRecipeTitle() + "' published!";
+
+        // create a notification for each follower
+        for (Long followerId : followerIds) {
+            Notification notification = new Notification(followerId, message);
+            notificationRepository.save(notification);
+        }
+    }
+}

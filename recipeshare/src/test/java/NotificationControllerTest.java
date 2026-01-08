@@ -54,11 +54,10 @@ public class NotificationControllerTest {
     @Test
     void testReadNotifications() {
         when(notificationService.markAsRead(1L))
-                .thenReturn(List.of(notification1));
-        List<Notification> result = notificationController.readNotifications(1L);
+                .thenReturn(notification1);
+        Notification result = notificationController.readNotification(1L);
 
-        assertEquals(1, result.size());
-        assertTrue(result.get(0).isRead());
+        assertEquals(1L, result.getUserId());
         verify(notificationService, times(1)).markAsRead(1L);
     }
 }

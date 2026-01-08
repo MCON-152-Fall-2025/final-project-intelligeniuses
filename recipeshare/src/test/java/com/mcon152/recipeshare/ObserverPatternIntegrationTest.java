@@ -1,3 +1,5 @@
+package com.mcon152.recipeshare;
+
 import com.mcon152.recipeshare.domain.AppUser;
 import com.mcon152.recipeshare.domain.DessertRecipe;
 import com.mcon152.recipeshare.domain.Follow;
@@ -7,7 +9,6 @@ import com.mcon152.recipeshare.repository.FollowRepository;
 import com.mcon152.recipeshare.repository.RecipeRepository;
 import com.mcon152.recipeshare.service.FollowService;
 import com.mcon152.recipeshare.service.NotificationService;
-import com.mcon152.recipeshare.service.RecipeService;
 import com.mcon152.recipeshare.service.RecipeServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

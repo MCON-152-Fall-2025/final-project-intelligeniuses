@@ -2,6 +2,7 @@ package com.mcon152.recipeshare.service;
 
 import com.mcon152.recipeshare.domain.Notification;
 import com.mcon152.recipeshare.events.RecipeCreatedEvent;
+import com.mcon152.recipeshare.repository.AppUserRepository;
 import com.mcon152.recipeshare.repository.NotificationRepository;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,13 @@ public class NotificationService {
     // dependencies
     private final NotificationRepository notificationRepository;
     private final FollowService followService;
+    private final AppUserRepository appUserRepository;
 
     // constructor
-    public NotificationService(NotificationRepository notificationRepository, FollowService followService) {
+    public NotificationService(NotificationRepository notificationRepository, FollowService followService, AppUserRepository appUserRepository) {
         this.notificationRepository = notificationRepository;
         this.followService = followService;
+        this.appUserRepository = appUserRepository;
     }
 
     // observer - listens for recipe events
@@ -42,10 +45,16 @@ public class NotificationService {
     }
 
     public List<Notification> getNotificationsForUser(Long userId) {
+       if(!appUserRepository.existsByUserId(userId)) {
+            throw new RuntimeException("No such user " + userId);
+        }
         return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
     public List<Notification> getUnreadNotificationsForUser(Long userId) {
+        if(!appUserRepository.existsByUserId(userId)) {
+            throw new RuntimeException("No such user " + userId);
+        }
         return notificationRepository.findByUserIdAndIsReadFalseOrderByCreatedAtDesc(userId);
     }
 

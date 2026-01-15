@@ -30,6 +30,8 @@ public class NotificationControllerTest {
 
     @Test
     void testGetNotifications() {
+        //asserts that a list of read notifications was received and
+        // verifies that the getReadNotificationsForUser was called only once
         when(notificationService.getNotificationsForUser(1L))
                 .thenReturn(List.of(notification1, notification2));
 
@@ -41,6 +43,8 @@ public class NotificationControllerTest {
 
     @Test
     void testGetUnreadNotifications() {
+        //asserts that a list of unread notifications was received and
+        // verifies that the getUnreadNotificationsForUser was called only once
         when(notificationService.getUnreadNotificationsForUser(1L))
                 .thenReturn(List.of(notification1));
 
@@ -53,6 +57,7 @@ public class NotificationControllerTest {
 
     @Test
     void testReadNotifications() {
+        //asserts that notifications are marked as read and verifies that markAsRead was called once
         when(notificationService.markAsRead(1L))
                 .thenReturn(notification1);
         Notification result = notificationController.readNotification(1L);
@@ -60,4 +65,29 @@ public class NotificationControllerTest {
         assertEquals(1L, result.getUserId());
         verify(notificationService, times(1)).markAsRead(1L);
     }
+
+    @Test
+    void testInvalidUserId(){
+        //asserts that Runtime exception is thrown when given user id is not found
+        when(notificationService.getNotificationsForUser(1L)).thenThrow(new RuntimeException());
+        assertThrows(RuntimeException.class, () -> notificationController.getNotifications(1L));
+    }
+
+    @Test
+    void testInvalidNotificationId(){
+        //asserts that Runtime exception is thrown when given notification id is not found
+        when(notificationService.markAsRead(1L)).thenThrow(new RuntimeException());
+        assertThrows(RuntimeException.class, () -> notificationController.readNotification(1L));
+    }
+
+    @Test
+    void testGetNotificationsWhenUserHasNoNotifications() {
+        //asserts that list of notifications is empty
+        when(notificationService.getNotificationsForUser(1L)).thenReturn(List.of());
+        List<Notification> result = notificationController.getNotifications(1L);
+        assertEquals(0, result.size());
+        verify(notificationService, times(1)).getNotificationsForUser(1L);
+    }
+
+
 }

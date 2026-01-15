@@ -45,14 +45,14 @@ public class NotificationService {
     }
 
     public List<Notification> getNotificationsForUser(Long userId) {
-       if(!appUserRepository.existsByUserId(userId)) {
+       if(!appUserRepository.existsById(userId)) {
             throw new RuntimeException("No such user " + userId);
         }
         return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
     public List<Notification> getUnreadNotificationsForUser(Long userId) {
-        if(!appUserRepository.existsByUserId(userId)) {
+        if(!appUserRepository.existsById(userId)) {
             throw new RuntimeException("No such user " + userId);
         }
         return notificationRepository.findByUserIdAndIsReadFalseOrderByCreatedAtDesc(userId);

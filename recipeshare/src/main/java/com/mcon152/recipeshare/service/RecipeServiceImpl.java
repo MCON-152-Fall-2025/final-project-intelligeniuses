@@ -24,6 +24,13 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe addRecipe(Recipe recipe) {
+
+        // declare add recipe event
+        System.out.println("\n=== ADDING NEW RECIPE ===");
+        System.out.println("Recipe Title: " + recipe.getTitle());
+        System.out.println("Author: " + (recipe.getAuthor() != null ? recipe.getAuthor().getDisplayName() : "null"));
+        System.out.println("Author ID: " + (recipe.getAuthor() != null ? recipe.getAuthor().getId() : "null"));
+
         recipe.setId(null); // ensure new entity
         Recipe savedRecipe = repo.save(recipe);
 
@@ -37,6 +44,9 @@ public class RecipeServiceImpl implements RecipeService {
             );
             eventPublisher.publishEvent(event); // publish event
         }
+
+        // declare recipe added successfully
+        System.out.println("=== RECIPE ADDED SUCCESSFULLY ===\n");
         return savedRecipe;
     }
 

@@ -28,6 +28,11 @@ public class NotificationService {
     @EventListener
     public void handleRecipeCreated(RecipeCreatedEvent event) {
 
+        // declare that notification event is received
+        System.out.println("*** NOTIFICATION EVENT RECEIVED ***");
+        System.out.println("Recipe Title: " + event.getRecipeTitle());
+        System.out.println("Author ID: " + event.getAuthorId());
+
         // get recipe author
         Long authorId = event.getAuthorId();
 
@@ -42,6 +47,10 @@ public class NotificationService {
             Notification notification = new Notification(followerId, message);
             notificationRepository.save(notification);
         }
+
+        // declare that notification processing is complete
+        System.out.println("=== NOTIFICATION PROCESSING COMPLETE ===");
+        System.out.println();
     }
 
     public List<Notification> getNotificationsForUser(Long userId) {

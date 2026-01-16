@@ -25,3 +25,6 @@ replay_pid*
 
 recipeshare/data/recipeshare.mv.db
 recipeshare/logs/*.log.gz
+logs/
+data/*.db
+recipeshare/data/*.db

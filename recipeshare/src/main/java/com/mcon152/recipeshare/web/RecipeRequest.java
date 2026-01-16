@@ -7,6 +7,7 @@ public class RecipeRequest {
     private String ingredients;
     private String instructions;
     private Integer servings;
+    private Long authorId;
 
     public RecipeRequest() {}
 
@@ -27,5 +28,8 @@ public class RecipeRequest {
 
     public Integer getServings() { return servings; }
     public void setServings(Integer servings) { this.servings = servings; }
+
+    public Long getAuthorId() { return authorId; }
+    public void setAuthorId(Long authorId) { this.authorId = authorId; }
 }
 

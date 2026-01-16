@@ -1,13 +1,16 @@
 package com.mcon152.recipeshare.web;
 
+import com.mcon152.recipeshare.domain.AppUser;
 import com.mcon152.recipeshare.domain.Recipe;
 import com.mcon152.recipeshare.domain.RecipeRegistry;
+import com.mcon152.recipeshare.repository.AppUserRepository;
 import com.mcon152.recipeshare.service.RecipeService;
 import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.slf4j.LoggerFactory;
+
 
 import java.net.URI;
 import java.util.List;
@@ -18,9 +21,11 @@ import java.util.List;
 public class RecipeController {
     Logger logger = LoggerFactory.getLogger(RecipeController.class);
     private final RecipeService recipeService;
+    private final AppUserRepository appUserRepository;
 
-    public RecipeController(RecipeService recipeService) {
+    public RecipeController(RecipeService recipeService, AppUserRepository appUserRepository) {
         this.recipeService = recipeService;
+        this.appUserRepository = appUserRepository;
     }
 
     /**
@@ -32,6 +37,14 @@ public class RecipeController {
         logger.info("Received request to add recipe: {}", recipeRequest);
         try {
             Recipe toSave = RecipeRegistry.createFromRequest(recipeRequest);
+
+            // Set the author if authorId is provided
+            if (recipeRequest.getAuthorId() != null) {
+                AppUser author = appUserRepository.findById(recipeRequest.getAuthorId())
+                        .orElseThrow(() -> new RuntimeException("Author not found"));
+                toSave.setAuthor(author);
+            }
+
             Recipe saved = recipeService.addRecipe(toSave);
 
             URI location = ServletUriComponentsBuilder
